@@ -1,25 +1,34 @@
 from audioop import add
 import sys
-import pyperclip
+import clipboard
 import json
 
-def save_items(filepath, data):
-    with open(filepath, "w"):
-        json.dump(data. f)
+SAVED_DATA = "clipboard.json"
 
-def load_items(filepath):
-    with open(filepath, "r") as f:
-        data = json.load(f)
-        return data
+def save_data(filepath, data):
+    with open(filepath, "w") as f:
+        json.dump(data, f)
+
+def load_data(filepath):
+    try:
+        with open(filepath, "r") as file:
+            data = json.load(file)
+            return data
+    except:
+        return {}
+
 
 if len(sys.argv) == 2:
     command = sys.argv[1]
+    data = load_data(SAVED_DATA)
     
     if command == "save":
-        print("Save")
-        save_items("clipboard.json", )
+        key = input("enter a key: ")
+        data[key] = clipboard.paste()
+        save_data(SAVED_DATA, data)
+        print(data, " has been saved.")
     elif command == "load":
-        print("Load")
+        print("Data loaded")
     elif command == "list":
         print("List")
     else:
@@ -27,3 +36,4 @@ if len(sys.argv) == 2:
     
 else:
     print("Please include only one command!")
+
